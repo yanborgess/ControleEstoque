@@ -22,18 +22,29 @@ public class ProdutoService {
         return produtoRepository.findAll();
     }
 
-    public Produto atualizar(Long id, Produto produto){
-        Optional<Produto> prod = produtoRepository.findById(id);
-        if (prod.isEmpty()){
-            throw new RuntimeException("Produto não escontrado");
-        }else {
-            return produtoRepository.save(produto);
-        }
+    public Produto atualizar(Long id, Produto produto) {
+        // 1. Busca o produto que já está no banco
+        return produtoRepository.findById(id)
+                .map(produtoExistente -> {
+                    // 2. Atualiza apenas se o campo no JSON não for nulo
+                    if (produto.getNome() != null) {
+                        produtoExistente.setNome(produto.getNome());
+                    }
+                    if (produto.getDescricao() != null) {
+                        produtoExistente.setDescricao(produto.getDescricao());
+                    }
+                    if (produto.getPreco() != null) {
+                        produtoExistente.setPreco(produto.getPreco());
+                    }
+
+                    // 3. Salva o objeto "produtoExistente" (que manteve os dados antigos onde não houve mudança)
+                    return produtoRepository.save(produtoExistente);
+                }).orElseThrow(() -> new RuntimeException("Produto não encontrado com o id: " + id));
     }
 
     public void deletar(Long id){
         if (!produtoRepository.existsById(id)){
-            throw  new RuntimeException("Id não escontrado");
+            throw  new RuntimeException("Id não encontrado");
         }
         produtoRepository.deleteById(id);
     }
