@@ -1,5 +1,6 @@
 package br.com.yanborges.Produtos.Controller;
 
+import br.com.yanborges.Produtos.Dto.ProdutoDTO;
 import br.com.yanborges.Produtos.Model.Produto;
 import br.com.yanborges.Produtos.Service.ProdutoService;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +17,18 @@ public class ProdutoController {
 
     private final ProdutoService produtoService;
 
+//    @PostMapping
+//    public ResponseEntity<Void> salvar(@RequestBody Produto produto){
+//        produtoService.salvar(produto);
+//        return ResponseEntity.ok().build();
+//    }
     @PostMapping
-    public ResponseEntity<Void> salvar(@RequestBody Produto produto){
+    public ResponseEntity<Void> salvar(@RequestBody ProdutoDTO dto){
+        Produto produto = Produto.builder()
+                .nome(dto.getNome())
+                .descricao(dto.getDescricao())
+                .preco(dto.getPreco())
+                .build();
         produtoService.salvar(produto);
         return ResponseEntity.ok().build();
     }
