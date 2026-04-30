@@ -17,11 +17,6 @@ public class ProdutoController {
 
     private final ProdutoService produtoService;
 
-//    @PostMapping
-//    public ResponseEntity<Void> salvar(@RequestBody Produto produto){
-//        produtoService.salvar(produto);
-//        return ResponseEntity.ok().build();
-//    }
     @PostMapping
     public ResponseEntity<Void> salvar(@RequestBody ProdutoDTO dto){
         Produto produto = Produto.builder()
